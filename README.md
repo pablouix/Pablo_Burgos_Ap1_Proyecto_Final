@@ -1,2 +1,2 @@
 ﻿# Búho Smartphone
-![proyect](https://user-images.githubusercontent.com/97201832/161635447-c9bf25d0-0c37-45a7-981f-d76e204697fe.png)
+![proyect](https://user-images.githubusercontent.com/97201832/161636239-bb051bd5-abae-441a-b789-e4b6fe6b909e.png)
