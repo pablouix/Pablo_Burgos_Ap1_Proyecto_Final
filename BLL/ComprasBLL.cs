@@ -42,6 +42,34 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
 
             try
             {
+                var compraAnterior = _contexto.Compras
+                .Where(x => x.CompraId == compras
+                .CompraId).Include(x => x.ComprasDetalles)
+                .AsNoTracking()
+                .SingleOrDefault();
+
+                foreach(var item in compraAnterior.ComprasDetalles)
+                {
+                    Productos productos = ProductosBLL.Buscar(item.ProductoId);
+                    productos.Cantidad -= item.Cantidad;
+
+                    float calculoItbis = productos.Precio * productos.Itbis/100;
+                    productos.PrecioConItbis = productos.Precio + calculoItbis;
+                    productos.PrecioTotal = productos.Cantidad * productos.PrecioConItbis;
+                }
+
+                List<ComprasDetalles> comprasDetalles = compras.ComprasDetalles;
+
+                foreach(var item in comprasDetalles)
+                {
+                    Productos productos = ProductosBLL.Buscar(item.ProductoId);
+                    productos.Cantidad += item.Cantidad;
+
+                    float calculoItbis = productos.Precio * productos.Itbis/100;
+                    productos.PrecioConItbis = productos.Precio + calculoItbis;
+                    productos.PrecioTotal = productos.Cantidad * productos.PrecioConItbis;
+                }
+
                 _contexto.Entry(compras).State = EntityState.Modified;
                 paso = _contexto.SaveChanges() > 0;
 
@@ -60,6 +88,18 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
             try
             {
                 _contexto.Compras.Add(compras);
+
+                List<ComprasDetalles> comprasDetalles = compras.ComprasDetalles;
+                foreach(var item in comprasDetalles)
+                {
+                    Productos productos = ProductosBLL.Buscar(item.ProductoId);
+                    productos.Cantidad += item.Cantidad;
+
+                    float calculoItbis = productos.Precio * productos.Itbis/100;
+                    productos.PrecioConItbis = productos.Precio + calculoItbis;
+                    productos.PrecioTotal = productos.Cantidad * productos.PrecioConItbis;
+                }
+
                 paso = _contexto.SaveChanges() > 0;
             }
             catch(Exception)
@@ -93,6 +133,18 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
 
                 if(compras != null)
                 {
+                    List<ComprasDetalles> comprasDetalles = compras.ComprasDetalles;
+
+                    foreach(var item in comprasDetalles)
+                    {
+                        Productos productos = ProductosBLL.Buscar(item.ProductoId);
+                        productos.Cantidad -= item.Cantidad;
+
+                        float calculoItbis = productos.Precio * productos.Itbis/100;
+                        productos.PrecioConItbis = productos.Precio + calculoItbis;
+                        productos.PrecioTotal = productos.Cantidad * productos.PrecioConItbis;
+                    }
+
                     _contexto.Compras.Remove(compras);
                     paso = _contexto.SaveChanges() > 0;
                 }
@@ -125,8 +177,7 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
 
             try
             {
-                lista = _contexto.Compras.ToList();
-
+                lista = _contexto.Compras.AsNoTracking().ToList();
             }
             catch(Exception)
             {

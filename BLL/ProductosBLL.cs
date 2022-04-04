@@ -126,7 +126,7 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
 
             try
             {
-                lista = _contexto.Productos.ToList();
+                lista = _contexto.Productos.AsNoTracking().ToList();
 
             }
             catch(Exception)

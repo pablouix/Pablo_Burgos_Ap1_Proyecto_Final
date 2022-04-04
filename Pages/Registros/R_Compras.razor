@@ -4,7 +4,7 @@
 @inject IToastService toast
 
 
-<PageTitle>Registro Compras</PageTitle>
+<PageTitle>Registro de Compras</PageTitle>
 
 <EditForm Model="compras" OnValidSubmit="Guardar">
 
@@ -264,6 +264,10 @@
                     descripcionDetalle = item.Descripcion;
                     cantidadDetalle = cantidadProducto;
                     compras.ComprasDetalles.Add(new ComprasDetalles(idDetalle, descripcionDetalle, cantidadDetalle));
+                }
+                else
+                {
+                    toast.ShowWarning("No se agrego, numero debe de ser positivo y mayor que 0.");
                 }
 
             }

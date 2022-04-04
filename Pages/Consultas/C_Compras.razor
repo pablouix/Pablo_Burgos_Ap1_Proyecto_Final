@@ -1,6 +1,6 @@
 @page "/C_Compras"
 
-<PageTitle>Consulta Compras</PageTitle>
+<PageTitle>Consulta de Compras</PageTitle>
 
 <EditForm Model="lista">
     <div class="card">
@@ -23,9 +23,24 @@
                     </div>
 
                     <button type="button" class="btn btn-primary" @onclick="Buscar"><span
-                    class="oi oi-magnifying-glass"></span></button>
+                            class="oi oi-magnifying-glass"></span></button>
 
                 </div>
+
+                <div class="row g-3 mb-3">
+
+                    <div class="col">
+                        <label>Desde</label>
+                        <input type="date" class="form-control" @bind="fechaDesde" />
+                    </div>
+
+                    <div class="col">
+                        <label>Hasta</label>
+                        <input type="date" class="form-control" @bind="fechaHasta" />
+                    </div>
+
+                </div>
+
             </form>
         </div>
 
@@ -34,7 +49,7 @@
                 <tr class="table">
                     <th>Id</th>
                     <th>Concepto</th>
-                    <th>Cantidad</th>
+                   @*  <th>Cantidad</th> *@
                     <th>Fecha de compra</th>
                     <th>Suplidor Id</th>
                     <th>Modificar</th>
@@ -46,7 +61,7 @@
                     <tr>
                         <td>@item.CompraId</td>
                         <td>@item.Concepto</td>
-                        <th> </th>
+                       @*  <th> </th> *@
                         <td>@item.FechaDeCompra</td>
                         <td>@item.SuplidoresId</td>
                         <a class="btn btn-sm btn-outline-primary oi oi-eye" href="R_Compras/@item.CompraId"></a>
@@ -63,15 +78,17 @@
     public string? filtro { get; set; }
     public string? Criterio { get; set; }
     public List<Compras> lista { get; set; } = new List<Compras>();
+    public DateTime? fechaDesde { get; set; }
+    public DateTime? fechaHasta { get; set; }
 
     [Inject]
     public ComprasBLL? comprasBLL { get; set; }
     protected override void OnInitialized()
-    {   
+    {
         base.OnInitialized();
         lista = ComprasBLL.ListaComprasCriterio(c => true);
-    } 
-    private void Buscar() 
+    }
+    private void Buscar()
     {
         if (Criterio != null)
         {
@@ -79,10 +96,12 @@
             {
                 case "1":
                     bool esNumero = Int32.TryParse(Convert.ToString(Criterio), out int id);
-                    if(esNumero)
+                    if (esNumero)
                         lista = ComprasBLL.ListaComprasCriterio(c => c.CompraId == id);
+                    else
+                        lista = ComprasBLL.ListaComprasCriterio(c => true);
                     break;
-                
+
                 case "2":
                     lista = ComprasBLL.ListaComprasCriterio(c => c.Concepto.ToLower().Contains(Criterio.ToLower()));
                     break;
@@ -92,6 +111,13 @@
         {
             lista = ComprasBLL.ListaComprasCriterio(c => true);
         }
-        
+
+        if (fechaDesde.HasValue && fechaHasta.HasValue)
+            lista = ComprasBLL.ListaComprasCriterio(f => f.FechaDeCompra.Date >= fechaDesde && f.FechaDeCompra.Date <= fechaHasta);
+        else if (fechaDesde.HasValue)
+            lista = ComprasBLL.ListaComprasCriterio(f => f.FechaDeCompra.Date >= fechaDesde);
+        else if (fechaHasta.HasValue)
+            lista = ComprasBLL.ListaComprasCriterio(f => f.FechaDeCompra.Date <= fechaHasta);
+
     }
 }

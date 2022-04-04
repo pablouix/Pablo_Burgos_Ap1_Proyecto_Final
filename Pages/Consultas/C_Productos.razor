@@ -1,6 +1,6 @@
 @page "/C_Productos"
 
-<PageTitle>Consulta Productos</PageTitle>
+<PageTitle>Consulta de Productos</PageTitle>
 
 <EditForm Model="lista">
     <div class="card">
@@ -26,6 +26,21 @@
                     class="oi oi-magnifying-glass"></span></button>
 
                 </div>
+
+                <div class="row g-3 mb-3">
+
+                    <div class="col">
+                        <label>Desde</label>
+                        <input type="date" class="form-control" @bind="fechaDesde" />
+                    </div>
+
+                    <div class="col">
+                        <label>Hasta</label>
+                        <input type="date" class="form-control" @bind="fechaHasta" />
+                    </div>
+
+                </div>
+
             </form>
         </div>
 
@@ -71,6 +86,9 @@
     public string? filtro { get; set; }
     public string? Criterio { get; set; }
     public List<Productos> lista { get; set; } = new List<Productos>();
+    public DateTime? fechaDesde { get; set; }
+    public DateTime? fechaHasta { get; set; }
+
 
     [Inject]
     public ProductosBLL? productosBLL { get; set; }
@@ -100,6 +118,13 @@
         {
             lista = ProductosBLL.ListaProductosCriterio(p => true);
         }
+
+        if (fechaDesde.HasValue && fechaHasta.HasValue)
+            lista = ProductosBLL.ListaProductosCriterio(f => f.Fecha.Date >= fechaDesde && f.Fecha.Date <= fechaHasta);
+        else if (fechaDesde.HasValue)
+            lista = ProductosBLL.ListaProductosCriterio(f => f.Fecha.Date >= fechaDesde);
+        else if (fechaHasta.HasValue)
+            lista = ProductosBLL.ListaProductosCriterio(f => f.Fecha.Date <= fechaHasta);
         
     }
 }

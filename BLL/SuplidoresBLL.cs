@@ -127,7 +127,7 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
 
             try
             {
-                lista = _contexto.Suplidores.ToList();
+                lista = _contexto.Suplidores.AsNoTracking().ToList();
 
             }
             catch(Exception)
