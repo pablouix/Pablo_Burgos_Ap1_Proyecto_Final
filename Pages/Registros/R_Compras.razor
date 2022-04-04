@@ -1,0 +1,279 @@
+@page "/R_Compras"
+@page "/R_Compras/{ComprasId:int}"
+
+@inject IToastService toast
+
+
+<PageTitle>Registro Compras</PageTitle>
+
+<EditForm Model="compras" OnValidSubmit="Guardar">
+
+    <DataAnnotationsValidator />
+
+    <div class="container">
+
+        <div class="card ">
+            <div class="card-header">
+                <h3> Registro de Compras </h3>
+            </div>
+
+            <div class="card-body">
+                <div class="form-row align-items-center">
+                    <div class="col g-3 mb-3">
+                        <div class="form-group">
+                            <label>Producto Id</label>
+                            <div class="input-group">
+                                <InputNumber @bind-Value="ComprasId" class="form-control col-4" />
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-primary input-group-text"
+                                        @onclick="Buscar">Buscar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 @* Fecha de creacion*@
+                <div class="form-group g-3 mb-3">
+                    <label> Fecha de creaci&oacute;n</label>
+                    <InputDate class="form-control" @bind-Value="compras.FechaDeCompra" />
+                    <ValidationMessage For="@(() => compras.FechaDeCompra)" />
+                </div>
+
+                @* Concepto *@
+                <div class="form-group g-3 mb-3">
+                    <label> Concepto </label>
+                    <InputText class="form-control" @bind-Value="compras.Concepto"/>
+                    <ValidationMessage For="@(() => compras.Concepto)" />
+                </div>
+
+                <div class="form-group g-3 mb-3">
+                    <label> Suplidores </label>
+                    <InputSelect class="form-control col-2 mb-3" @bind-Value="filtroSuplidores">
+
+                        <option value="0" disabled selected>Seleccione un suplidor</option>
+                        
+                        @foreach (var item in SuplidoresBLL.ListaSuplidoresSimple())
+                        {
+                            <option value="@item.SuplidoresId" >@item.Representante, empresa ( @item.Compania ) </option>
+                        } 
+
+                    </InputSelect>  
+
+                </div>
+
+
+              
+               
+            </div>
+
+            
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Compras detalles</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <form class="row g-3 mb-3"> 
+
+                            <div class="col">
+                                <label> Productos</label>
+                                <InputSelect class="form-control col-2 mb-3" @bind-Value="filtroProductos">
+
+                                    <option value="0" disabled selected>Seleccione un producto</option>
+                                    
+                                    @foreach (var item in  ProductosBLL.ListaProductosSimple())
+                                    {
+                                        <option value="@item.ProductoId" >@item.Descripcion </option>
+                                    } 
+
+                                </InputSelect>  
+                        
+                            </div>
+
+                            <div class="col">
+                                <label> Cantidad </label>
+                                <InputNumber class="form-control" @bind-Value="cantidadProducto"/>
+                                
+                            </div>        
+
+                            <div class="col">
+                                <label></label>
+                                <div class="card">
+                                    <button type="button" class="btn btn-success" 
+                                    @onclick="AgregarDetalleCompras"><span class="oi oi-plus"></span> Agregar Detalle</button>
+
+                                </div>
+                            </div>                                              
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <table class="table table-light">
+                        <thead class="thead">
+                            <tr class="table">
+                                <th>Id producto</th>
+                                <th>Descripci&oacute;n</th>
+                                <th>Cantidad</th>
+                                <th>Acci&oacute;n</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in compras.ComprasDetalles)
+                            {
+                                <tr>
+                                    <td>@item.ProductoId</td>
+                                    <td>@item.Descripcion</td>
+                                    <td>@item.Cantidad</td>                                                  
+                                    <td><span class="btn btn-lg btn-danger oi oi-ban" href="#"  @onclick="@(() => RemoverFila(item))"> </span> </td>
+                                </tr>
+                            } 
+                        </tbody>
+                    </table>
+                </div>
+            <div class="card-footer">
+                <div class="form-group text-center" display: inline-block>
+                    <button class="btn btn-lg btn-primary" @onclick="Nuevo"><span class="oi oi-file"></span> Nuevo</button>
+                    <button type="submit" class="btn btn-lg btn-success" @onclick="Guardar"><span class="oi oi-box"></span> Guardar</button>
+                    <button class="btn btn-lg btn-danger" @onclick="Eliminar"><span class="oi oi-trash"></span> Eliminar</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public int ComprasId { get; set; }
+    public Compras compras{ get; set; } = new Compras();
+    public string filtroSuplidores { get; set; }
+    public string filtroProductos {get; set; }
+
+    [Inject]
+    public DispositivosBLL? dispositivosBLL {get; set; }
+
+    [Inject]
+    public ProductosBLL? productosBLL {get; set; }
+
+    [Inject]
+    public SuplidoresBLL? suplidoresBLL {get; set; }
+
+    [Inject]
+    public ComprasBLL? comprasBLL { get; set; }
+
+    
+    public int idDetalle { get; set; }
+    public string descripcionDetalle { get; set; }
+    public int cantidadDetalle { get; set; }
+    public int cantidadProducto { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        compras = new Compras();
+        this.compras.ComprasDetalles = new List<ComprasDetalles>();
+        Buscar();
+    }
+
+    public void Buscar()
+    {
+        if(this.ComprasId>0)
+        {
+            var encontrado = ComprasBLL.Buscar(this.ComprasId);
+
+            if(encontrado != null)
+            {
+                this.compras = encontrado;
+                compras.CompraId = ComprasId; 
+                filtroSuplidores = Convert.ToString(compras.SuplidoresId);
+                toast.ShowSuccess("Compra encontrada con éxito.");
+            }
+            else
+            {
+                toast.ShowWarning("No se encontró la compra.");
+                Nuevo();
+            }
+        }  
+    }
+
+    public void Nuevo()
+    {
+        ComprasId = 0;
+        compras = new Compras();
+        this.compras.ComprasDetalles = new List<ComprasDetalles>();
+    }
+
+    public void Eliminar()
+    {
+        if(ComprasBLL.Eliminar(compras.CompraId))
+        {
+            Nuevo();
+            toast.ShowSuccess("Compra eliminada con éxito.");
+        }
+        else
+        {
+            toast.ShowError("No se completó la eliminación de la compra.");
+        }
+    }
+
+    public void Guardar()
+    {
+        if(this.ComprasId > 0 && filtroSuplidores != null && compras.Concepto != null)
+        {
+            AgregarDatosDeSuplidores();
+            if(ComprasBLL.Guardar(this.compras))
+            {
+                toast.ShowSuccess("Compra guardada con éxito.");
+                Nuevo();
+            }
+            else
+            {
+                toast.ShowError("No se guardó la compra.");
+            }
+        }
+        else
+        {
+            Nuevo();
+        }
+    }
+    public void AgregarDatosDeSuplidores()
+    {
+        foreach(var item in SuplidoresBLL.ListaSuplidoresSimple())
+        {
+            if(filtroSuplidores == Convert.ToString(item.SuplidoresId))
+            {
+                compras.SuplidoresId = item.SuplidoresId;
+            }
+        }
+    }
+
+    public void AgregarDetalleCompras()
+    {
+        foreach(var item in ProductosBLL.ListaProductosSimple())
+        {
+            if(filtroProductos == Convert.ToString(item.ProductoId))
+            {
+                if(item.Cantidad != 0 && item.Cantidad > 0 && cantidadProducto > 0)
+                {
+                    idDetalle = item.ProductoId;
+                    descripcionDetalle = item.Descripcion;
+                    cantidadDetalle = cantidadProducto;
+                    compras.ComprasDetalles.Add(new ComprasDetalles(idDetalle, descripcionDetalle, cantidadDetalle));
+                }
+
+            }
+
+        }
+        cantidadProducto = 0;
+    }
+
+    private void RemoverFila(ComprasDetalles item)
+    {
+        this.compras.ComprasDetalles.Remove(item);
+    }
+}

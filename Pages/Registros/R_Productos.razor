@@ -1,0 +1,218 @@
+@page "/R_Productos"
+@page "/R_Productos/{ProductoId:int}"
+
+@inject IToastService toast
+
+
+<PageTitle>Registro Productos</PageTitle>
+
+<EditForm Model="productos" OnValidSubmit="Guardar">
+
+    <DataAnnotationsValidator />
+
+    <div class="container">
+
+        <div class="card ">
+            <div class="card-header">
+                <h3> Registro de Productos </h3>
+            </div>
+
+            <div class="card-body">
+                <div class="form-row align-items-center">
+                    <div class="col g-3 mb-3">
+                        <div class="form-group">
+                            <label>Producto Id</label>
+                            <div class="input-group">
+                                <InputNumber @bind-Value="ProductoId" class="form-control col-4" />
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-primary input-group-text"
+                                        @onclick="Buscar">Buscar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 @* Fecha de creacion*@
+                <div class="form-group g-3 mb-3">
+                    <label> Fecha de creaci&oacute;n</label>
+                    <InputDate class="form-control" @bind-Value="productos.Fecha" />
+                    <ValidationMessage For="@(() => productos.Fecha)" />
+                </div>
+
+                @* Descripcion *@
+                <div class="form-group g-3 mb-3">
+                    <label> Descripci&oacute;n </label>
+                    <InputText class="form-control" @bind-Value="productos.Descripcion"/>
+                    <ValidationMessage For="@(() => productos.Descripcion)" />
+                </div>
+
+                <div class="form-group g-3 mb-3">
+                    <label> Dispositivos </label>
+                    <InputSelect class="form-control col-2 mb-3" @bind-Value="filtroDispositivos">
+
+                        <option value="0" disabled selected>Seleccione un dispositivo</option>
+                        
+                        @foreach (var item in DispositivosBLL.ListaDispositivosSimple())
+                        {
+                            <option value="@item.DispositivoId" >@item.Marca  @item.Modelo  @item.SistemaOperativo </option>
+                        } 
+
+                    </InputSelect>  
+
+                </div>
+
+                @* Cantidad, precio, itbis *@
+                <form class="row g-3 mb-3"> 
+                    <div class="col">
+                        <label> Cantidad </label>
+                        <InputNumber class="form-control" @bind-Value="productos.Cantidad"/>
+                        <ValidationMessage For="@(() => productos.Cantidad)" @onblur="calularPrecioConItbis" />
+                    </div>           
+                    <div class="col">
+                        <label> Precio </label>
+                        <InputNumber class="form-control" @bind-Value="productos.Precio" @onblur="calularPrecioConItbis" />
+                        <ValidationMessage For="@(() => productos.Precio)" />
+                    </div>
+                    <div class="col">
+                        <label> Itbis </label>
+                        <div class="input-group">
+                            <InputNumber readonly class="form-control" @bind-Value="productos.Itbis" />
+                            <span class="input-group-text">%</span>
+                        </div>
+                        <ValidationMessage For="@(() => productos.Itbis)" />
+                    </div>                                                      
+                </form>
+
+                <form class="row g-3 mb-3"> 
+                    <div class="col">
+                        <label> Precio con Itbis </label>
+                        <InputNumber readonly class="form-control" @bind-Value="productos.PrecioConItbis"/>
+                    
+                    </div>           
+                    <div class="col">
+                        <label> Precio Total </label>
+                        <InputNumber readonly class="form-control" @bind-Value="productos.PrecioTotal" />
+                    
+                    </div>
+                </form>            
+            </div>
+
+            <div class="card-footer">
+                <div class="form-group text-center" display: inline-block>
+                    <button class="btn btn-lg btn-primary" @onclick="Nuevo"><span class="oi oi-file"></span> Nuevo</button>
+                    <button type="submit" class="btn btn-lg btn-success" @onclick="Guardar"><span class="oi oi-box"></span> Guardar</button>
+                    <button class="btn btn-lg btn-danger" @onclick="Eliminar"><span class="oi oi-trash"></span> Eliminar</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public int ProductoId { get; set; }
+    public Productos productos{ get; set; } = new Productos();
+    public string filtroDispositivos { get; set; }
+
+    [Inject]
+    public DispositivosBLL? dispositivosBLL {get; set; }
+
+    [Inject]
+    public ProductosBLL? productosBLL { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        productos = new Productos();
+        Buscar();
+    }
+
+    public void Buscar()
+    {
+        if(this.ProductoId>0)
+        {
+            var encontrado = ProductosBLL.Buscar(this.ProductoId);
+
+            if(encontrado != null)
+            {
+                this.productos = encontrado;
+                filtroDispositivos = Convert.ToString(productos.DispositivoId);
+                toast.ShowSuccess("Producto encontrado con éxito.");
+            }
+            else
+            {
+                toast.ShowWarning("No se encontró el producto.");
+                Nuevo();
+            }
+        }  
+    }
+
+    public void Nuevo()
+    {
+        ProductoId = 0;
+        productos = new Productos();
+    }
+
+    public void Eliminar()
+    {
+        if(ProductosBLL.Eliminar(productos.ProductoId))
+        {
+            Nuevo();
+            toast.ShowSuccess("Producto eliminado con éxito.");
+        }
+        else
+        {
+            toast.ShowError("No se completó la eliminación del producto.");
+        }
+    }
+
+    public void Guardar()
+    {
+        if(this.ProductoId > 0 && productos.Descripcion != null
+        && productos.Cantidad > 0 && productos.Precio > 0)
+        {
+            AgregarDatosDeDispositivo();
+            if(ProductosBLL.Guardar(this.productos))
+            {
+                toast.ShowSuccess("Producto guardado con éxito.");
+                Nuevo();
+            }
+            else
+            {
+                toast.ShowError("No se guardó el producto.");
+            }
+        }
+        else
+        {
+            Nuevo();
+        }
+    }
+
+    public void calularPrecioConItbis()
+    {
+        float calculoItbis = productos.Precio * productos.Itbis/100;
+        productos.PrecioConItbis = productos.Precio + calculoItbis;
+        calcularPrecioTotal();
+    }
+
+    public void calcularPrecioTotal()
+    {
+        productos.PrecioTotal = productos.Cantidad * productos.PrecioConItbis;
+    }
+
+    public void AgregarDatosDeDispositivo()
+    {
+        foreach(var item in DispositivosBLL.ListaDispositivosSimple())
+        {
+            if(filtroDispositivos == Convert.ToString(item.DispositivoId))
+            {
+                productos.DispositivoId = item.DispositivoId;
+            }
+        }
+    }
+}

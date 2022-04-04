@@ -1,0 +1,104 @@
+@page "/C_Suplidores"
+
+<PageTitle>Consulta Dispositivos</PageTitle>
+
+<EditForm Model="lista">
+    <div class="card">
+        <div class="card-header">
+            <h4>Consulta de Suplidores</h4>
+        </div>
+
+        <div class="card-body">
+            <form>
+                <div class="input-group d-flex align-items-end">
+                    <InputSelect class="form-control col-2" @bind-Value="filtro">
+                        <option value="0" disabled selected>Seleccione un filtro</option>
+                        <option value="1">Id</option>
+                        <option value="2">Representante</option>
+                        <option value="3">Compania</option>
+                    </InputSelect>
+
+                    <div class="flex-fill mx-2">
+                        <label>Busqueda</label>
+                        <InputText class="form-control" @bind-Value="Criterio" />
+                    </div>
+
+                    <button type="button" class="btn btn-primary" @onclick="Buscar"><span
+                    class="oi oi-magnifying-glass"></span></button>
+
+                </div>
+            </form>
+        </div>
+
+        <table class="table table-light">
+            <thead class="thead">
+                <tr class="table">
+                    <th>Id</th>
+                    <th>Representante</th>
+                    <th>Compania</th>
+                    <th>Direcci&oacute;n</th>
+                    <th>Tel&eacute;fono</th>
+                    <th>Fecha de Creaci&oacute;n</th>
+                    <th>Modificar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in lista)
+                {
+                    <tr>
+                        <td>@item.SuplidoresId</td>
+                        <td>@item.Representante</td>
+                        <td>@item.Compania</td>
+                        <td>@item.Direccion </td>
+                        <td>@item.Telefono </td>
+                        <td>@item.FechaDeCreacion </td>
+                        <a class="btn btn-sm btn-outline-primary oi oi-eye" href="R_Suplidores/@item.SuplidoresId"></a>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+
+</EditForm>
+
+@code {
+    public string? filtro { get; set; }
+    public string? Criterio { get; set; }
+    public List<Suplidores> lista { get; set; } = new List<Suplidores>();
+
+    [Inject]
+    public SuplidoresBLL? suplidoresBLL { get; set; }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        lista = SuplidoresBLL.ListaSuplidoresCriterio(s => true);
+    } 
+    private void Buscar()
+    {
+        if (Criterio != null)
+        {
+            switch (filtro)
+            {
+                case "1":
+                    bool esNumero = Int32.TryParse(Convert.ToString(Criterio), out int id);
+                    if(esNumero)
+                        lista = SuplidoresBLL.ListaSuplidoresCriterio(s => s.SuplidoresId== id);
+                    break;
+                
+                case "2":
+                    lista = SuplidoresBLL.ListaSuplidoresCriterio(r => r.Representante.ToLower().Contains(Criterio.ToLower()));
+                    break;
+
+                case "3":
+                    lista = SuplidoresBLL.ListaSuplidoresCriterio(c => c.Compania.ToLower().Contains(Criterio.ToLower()));
+                    break;
+            }
+        }
+        else
+        {
+            lista = SuplidoresBLL.ListaSuplidoresCriterio(s => true);
+        }
+        
+    }
+}

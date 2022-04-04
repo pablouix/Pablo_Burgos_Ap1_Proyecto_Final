@@ -1,0 +1,159 @@
+@page "/R_Suplidores"
+@page "/R_Suplidores/{SuplidoresId:int}"
+
+@inject IToastService toast
+
+
+<PageTitle>Registro Suplidores</PageTitle>
+
+<EditForm Model="suplidores" OnValidSubmit="Guardar">
+
+    <DataAnnotationsValidator />
+
+    <div class="container">
+
+        <div class="card ">
+            <div class="card-header">
+                <h3> Registro de Suplidores </h3>
+            </div>
+
+            <div class="card-body">
+                <div class="form-row align-items-center">
+                    <div class="col g-3 mb-3">
+                        <div class="form-group">
+                            <label>Suplidor Id</label>
+                            <div class="input-group">
+                                <InputNumber @bind-Value="SuplidoresId" class="form-control col-4" />
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-primary input-group-text"
+                                        @onclick="Buscar">Buscar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 @* Fecha de creacion*@
+                <div class="form-group g-3 mb-3">
+                    <label> Fecha de creaci&oacute;n</label>
+                    <InputDate class="form-control" @bind-Value="suplidores.FechaDeCreacion" />
+                    <ValidationMessage For="@(() => suplidores.FechaDeCreacion)" />
+                </div>
+
+                <form class="row g-3 mb-3">             
+                    <div class="col">
+                        <label> Representante </label>
+                        <InputText class="form-control" @bind-Value="suplidores.Representante" />
+                        <ValidationMessage For="@(() => suplidores.Representante)" />
+                    </div>
+                    <div class="col">
+                        <label> Compañ&iacute;a </label>
+                        <InputText class="form-control" @bind-Value="suplidores.Compania" />
+                        <ValidationMessage For="@(() => suplidores.Compania)" />
+                    </div>                                                      
+                </form>
+
+                 @* Direccion *@
+                <div class="form-group g-3 mb-3">
+                    <label> Direcci&oacute;n </label>
+                    <InputText class="form-control" @bind-Value="suplidores.Direccion"/>
+                    <ValidationMessage For="@(() => suplidores.Direccion)" />
+                </div>
+
+                @* Telefono *@
+                <div class="form-group g-3 mb-3">
+                    <label> Tel&eacute;fono </label>
+                    <InputText class="form-control" @bind-Value="suplidores.Telefono" placeholder="000-000-0000"  />
+                    <ValidationMessage For="@(() => suplidores.Telefono)" />
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="form-group text-center" display: inline-block>
+                    <button class="btn btn-lg btn-primary" @onclick="Nuevo"><span class="oi oi-file"></span> Nuevo</button>
+                    <button type="submit" class="btn btn-lg btn-success" @onclick="Guardar"><span class="oi oi-box"></span> Guardar</button>
+                    <button class="btn btn-lg btn-danger" @onclick="Eliminar"><span class="oi oi-trash"></span> Eliminar</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public int SuplidoresId { get; set; }
+    public Suplidores suplidores { get; set; } = new Suplidores();
+
+    [Inject]
+    public SuplidoresBLL? suplidoresBLL { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        suplidores = new Suplidores();
+        Buscar();
+    }
+
+    public void Buscar()
+    {
+        if(this.SuplidoresId>0)
+        {
+            var encontrado = SuplidoresBLL.Buscar(this.SuplidoresId);
+
+            if(encontrado != null)
+            {
+                this.suplidores = encontrado;
+                toast.ShowSuccess("Suplidor encontrado con éxito.");
+            }
+            else
+            {
+                toast.ShowWarning("No se encontró el suplidor.");
+                Nuevo();
+            }
+        }  
+    }
+
+    public void Nuevo()
+    {
+        SuplidoresId = 0;
+        suplidores = new Suplidores();
+    }
+
+    public void Eliminar()
+    {
+        if(SuplidoresBLL.Eliminar(suplidores.SuplidoresId))
+        {
+            Nuevo();
+            toast.ShowSuccess("Suplidor eliminado con éxito.");
+        }
+        else
+        {
+            toast.ShowError("No se completó la eliminación del suplidor.");
+        }
+    }
+
+    public void Guardar()
+    {
+        if(this.SuplidoresId > 0 && suplidores.Representante != null)
+        {
+            if(SuplidoresBLL.Guardar(this.suplidores))
+            {
+                toast.ShowSuccess("Suplidor guardado con éxito.");
+                Nuevo();
+            }
+            else
+            {
+                toast.ShowError("No se guardó el suplidor.");
+            }
+        }
+        else
+        {
+            toast.ShowInfo("Falta llenar campos");
+        }
+    }
+}
+

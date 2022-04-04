@@ -1,0 +1,97 @@
+@page "/C_Compras"
+
+<PageTitle>Consulta Compras</PageTitle>
+
+<EditForm Model="lista">
+    <div class="card">
+        <div class="card-header">
+            <h4>Consulta de Compras</h4>
+        </div>
+
+        <div class="card-body">
+            <form>
+                <div class="input-group d-flex align-items-end">
+                    <InputSelect class="form-control col-2" @bind-Value="filtro">
+                        <option value="0" disabled selected>Seleccione un filtro</option>
+                        <option value="1">Id</option>
+                        <option value="2">Concepto</option>
+                    </InputSelect>
+
+                    <div class="flex-fill mx-2">
+                        <label>Busqueda</label>
+                        <InputText class="form-control" @bind-Value="Criterio" />
+                    </div>
+
+                    <button type="button" class="btn btn-primary" @onclick="Buscar"><span
+                    class="oi oi-magnifying-glass"></span></button>
+
+                </div>
+            </form>
+        </div>
+
+        <table class="table table-light">
+            <thead class="thead">
+                <tr class="table">
+                    <th>Id</th>
+                    <th>Concepto</th>
+                    <th>Cantidad</th>
+                    <th>Fecha de compra</th>
+                    <th>Suplidor Id</th>
+                    <th>Modificar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in lista)
+                {
+                    <tr>
+                        <td>@item.CompraId</td>
+                        <td>@item.Concepto</td>
+                        <th> </th>
+                        <td>@item.FechaDeCompra</td>
+                        <td>@item.SuplidoresId</td>
+                        <a class="btn btn-sm btn-outline-primary oi oi-eye" href="R_Compras/@item.CompraId"></a>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+
+</EditForm>
+
+@code {
+    public string? filtro { get; set; }
+    public string? Criterio { get; set; }
+    public List<Compras> lista { get; set; } = new List<Compras>();
+
+    [Inject]
+    public ComprasBLL? comprasBLL { get; set; }
+    protected override void OnInitialized()
+    {   
+        base.OnInitialized();
+        lista = ComprasBLL.ListaComprasCriterio(c => true);
+    } 
+    private void Buscar() 
+    {
+        if (Criterio != null)
+        {
+            switch (filtro)
+            {
+                case "1":
+                    bool esNumero = Int32.TryParse(Convert.ToString(Criterio), out int id);
+                    if(esNumero)
+                        lista = ComprasBLL.ListaComprasCriterio(c => c.CompraId == id);
+                    break;
+                
+                case "2":
+                    lista = ComprasBLL.ListaComprasCriterio(c => c.Concepto.ToLower().Contains(Criterio.ToLower()));
+                    break;
+            }
+        }
+        else
+        {
+            lista = ComprasBLL.ListaComprasCriterio(c => true);
+        }
+        
+    }
+}
