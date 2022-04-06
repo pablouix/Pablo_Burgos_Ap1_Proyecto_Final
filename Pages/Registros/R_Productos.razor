@@ -49,7 +49,7 @@
 
                 <div class="form-group g-3 mb-3">
                     <label> Dispositivos </label>
-                    <InputSelect class="form-control col-2 mb-3" @bind-Value="filtroDispositivos">
+                    <InputSelect class="form-select col-2 mb-3" @bind-Value="filtroDispositivos">
 
                         <option value="0" disabled selected>Seleccione un dispositivo</option>
                         
@@ -59,6 +59,7 @@
                         } 
 
                     </InputSelect>  
+                    <ValidationMessage For="@(() => productos.DispositivoId)" />
 
                 </div>
 
@@ -174,7 +175,7 @@
     public void Guardar()
     {
         if(this.ProductoId > 0 && productos.Descripcion != null
-        && productos.Cantidad > 0 && productos.Precio > 0)
+        && productos.Cantidad > 0 && productos.Precio > 0 && filtroDispositivos != null) 
         {
             AgregarDatosDeDispositivo();
             if(ProductosBLL.Guardar(this.productos))
@@ -189,7 +190,8 @@
         }
         else
         {
-            Nuevo();
+            toast.ShowWarning("Campos incomplestos");
+            //Nuevo();
         }
     }
 
@@ -212,6 +214,7 @@
             if(filtroDispositivos == Convert.ToString(item.DispositivoId))
             {
                 productos.DispositivoId = item.DispositivoId;
+                productos.descripcionDispositivo = item.Marca+" "+item.Modelo+" "+item.SistemaOperativo;
             }
         }
     }

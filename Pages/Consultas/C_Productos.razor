@@ -11,10 +11,12 @@
         <div class="card-body">
             <form>
                 <div class="input-group d-flex align-items-end">
-                    <InputSelect class="form-control col-2" @bind-Value="filtro">
+                    <InputSelect class="form-select col-2" @bind-Value="filtro">
                         <option value="0" disabled selected>Seleccione un filtro</option>
                         <option value="1">Id</option>
                         <option value="2">Descripcion</option>
+                        <option value="3">Dispositivo</option>
+
                     </InputSelect>
 
                     <div class="flex-fill mx-2">
@@ -54,8 +56,8 @@
                     <th>Precio</th>
                     <th>Itbis</th>
                     <th>Precio con itbis</th>
-                    <th>Precio existencia total</th>
-                    <th>Id Dispositivo</th>
+                    <th>Precio total exitencia (itbis)</th>
+                    <th>Dispositivo</th>
                     <th>Modificar</th>
                 </tr>
             </thead>
@@ -65,13 +67,13 @@
                     <tr>
                         <td>@item.ProductoId</td>
                         <td>@item.Descripcion</td>
-                        <td>@item.Fecha</td>
+                        <td>@item.Fecha.Day/@item.Fecha.Month/@item.Fecha.Year</td>
                         <td>@item.Cantidad</td>
-                        <td> $ @item.Precio </td>
+                        <td> $ @(@item.Precio*100/100) </td>
                         <td>@item.Itbis % </td>
-                        <td> $ @item.PrecioConItbis </td>
-                        <td> $ @item.PrecioTotal </td>
-                        <td>@item.DispositivoId </td>
+                        <td> $ @(@item.PrecioConItbis*100/100) </td>
+                        <td> $ @(@item.PrecioTotal*100/100) </td> 
+                        <td>@item.descripcionDispositivo </td>
                         <a class="btn btn-sm btn-outline-primary oi oi-eye" href="R_Productos/@item.ProductoId"></a>
                     </tr>
                 }
@@ -111,6 +113,10 @@
                 
                 case "2":
                     lista = ProductosBLL.ListaProductosCriterio(d => d.Descripcion.ToLower().Contains(Criterio.ToLower()));
+                    break;
+
+                case "3":
+                    lista = ProductosBLL.ListaProductosCriterio(d => d.descripcionDispositivo.ToLower().Contains(Criterio.ToLower()));
                     break;
             }
         }

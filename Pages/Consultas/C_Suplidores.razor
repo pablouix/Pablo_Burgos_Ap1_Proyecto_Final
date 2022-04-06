@@ -11,11 +11,11 @@
         <div class="card-body">
             <form>
                 <div class="input-group d-flex align-items-end">
-                    <InputSelect class="form-control col-2" @bind-Value="filtro">
+                    <InputSelect class="form-select col-2" @bind-Value="filtro">
                         <option value="0" disabled selected>Seleccione un filtro</option>
                         <option value="1">Id</option>
                         <option value="2">Representante</option>
-                        <option value="3">Compania</option>
+                        <option value="3">Compañia</option>
                     </InputSelect>
 
                     <div class="flex-fill mx-2">
@@ -50,10 +50,10 @@
                 <tr class="table">
                     <th>Id</th>
                     <th>Representante</th>
-                    <th>Compania</th>
+                    <th>Compañia</th>
                     <th>Direcci&oacute;n</th>
                     <th>Tel&eacute;fono</th>
-                    <th>Fecha de Creaci&oacute;n</th>
+                    <th>Fecha de creaci&oacute;n</th>
                     <th>Modificar</th>
                 </tr>
             </thead>
@@ -66,7 +66,7 @@
                         <td>@item.Compania</td>
                         <td>@item.Direccion </td>
                         <td>@item.Telefono </td>
-                        <td>@item.FechaDeCreacion </td>
+                        <td>@item.FechaDeCreacion.Day/@item.FechaDeCreacion.Month/@item.FechaDeCreacion.Year</td>
                         <a class="btn btn-sm btn-outline-primary oi oi-eye" href="R_Suplidores/@item.SuplidoresId"></a>
                     </tr>
                 }

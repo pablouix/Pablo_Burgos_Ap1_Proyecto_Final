@@ -49,7 +49,7 @@
 
                 <div class="form-group g-3 mb-3">
                     <label> Suplidores </label>
-                    <InputSelect class="form-control col-2 mb-3" @bind-Value="filtroSuplidores">
+                    <InputSelect class="form-select col-2 mb-3" @bind-Value="filtroSuplidores">
 
                         <option value="0" disabled selected>Seleccione un suplidor</option>
                         
@@ -59,6 +59,7 @@
                         } 
 
                     </InputSelect>  
+                    <ValidationMessage For="@(() => compras.SuplidoresId)" />
 
                 </div>
 
@@ -78,7 +79,7 @@
 
                             <div class="col">
                                 <label> Productos</label>
-                                <InputSelect class="form-control col-2 mb-3" @bind-Value="filtroProductos">
+                                <InputSelect class="form-select col-2 mb-3" @bind-Value="filtroProductos">
 
                                     <option value="0" disabled selected>Seleccione un producto</option>
                                     
@@ -116,6 +117,8 @@
                                 <th>Id producto</th>
                                 <th>Descripci&oacute;n</th>
                                 <th>Cantidad</th>
+                                <th>Precio unidad</th>
+                                <th>Total</th>
                                 <th>Acci&oacute;n</th>
                             </tr>
                         </thead>
@@ -125,12 +128,15 @@
                                 <tr>
                                     <td>@item.ProductoId</td>
                                     <td>@item.Descripcion</td>
-                                    <td>@item.Cantidad</td>                                                  
+                                    <td>@item.Cantidad</td>   
+                                    <td>$ @item.PrecioUnidad</td> 
+                                    <td>$ @(@item.Cantidad*@item.PrecioUnidad)</td>                                              
                                     <td><span class="btn btn-lg btn-danger oi oi-ban" href="#"  @onclick="@(() => RemoverFila(item))"> </span> </td>
                                 </tr>
                             } 
                         </tbody>
                     </table>
+                    <span class="input-group-text">Precio total: $ @compras.ComprasDetalles.Sum(p => p.Cantidad*p.PrecioUnidad)</span> 
                 </div>
             <div class="card-footer">
                 <div class="form-group text-center" display: inline-block>
@@ -223,7 +229,7 @@
 
     public void Guardar()
     {
-        if(this.ComprasId > 0 && filtroSuplidores != null && compras.Concepto != null)
+        if(this.ComprasId > 0 && filtroSuplidores != null && compras.Concepto != null && filtroSuplidores != null)
         {
             AgregarDatosDeSuplidores();
             if(ComprasBLL.Guardar(this.compras))
@@ -238,7 +244,8 @@
         }
         else
         {
-            Nuevo();
+            toast.ShowWarning("Campos incompletos.");
+            //Nuevo();
         }
     }
     public void AgregarDatosDeSuplidores()
@@ -248,6 +255,7 @@
             if(filtroSuplidores == Convert.ToString(item.SuplidoresId))
             {
                 compras.SuplidoresId = item.SuplidoresId;
+                compras.DescripcionSuplidor= item.Representante+" , "+item.Compania;
             }
         }
     }
@@ -263,7 +271,8 @@
                     idDetalle = item.ProductoId;
                     descripcionDetalle = item.Descripcion;
                     cantidadDetalle = cantidadProducto;
-                    compras.ComprasDetalles.Add(new ComprasDetalles(idDetalle, descripcionDetalle, cantidadDetalle));
+                    
+                    compras.ComprasDetalles.Add(new ComprasDetalles(idDetalle, descripcionDetalle, cantidadDetalle, item.Precio));
                 }
                 else
                 {

@@ -23,9 +23,16 @@ namespace Pablo_Burgos_Proyecto_Final.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("CantidadProductos")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Concepto")
                         .IsRequired()
                         .HasMaxLength(40)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DescripcionSuplidor")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("FechaDeCompra")
@@ -33,6 +40,9 @@ namespace Pablo_Burgos_Proyecto_Final.Migrations
 
                     b.Property<int>("SuplidoresId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<float>("precioTotal")
+                        .HasColumnType("REAL");
 
                     b.HasKey("CompraId");
 
@@ -54,6 +64,9 @@ namespace Pablo_Burgos_Proyecto_Final.Migrations
                     b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<float>("PrecioUnidad")
+                        .HasColumnType("REAL");
 
                     b.Property<int>("ProductoId")
                         .HasColumnType("INTEGER");
@@ -143,6 +156,10 @@ namespace Pablo_Burgos_Proyecto_Final.Migrations
                     b.Property<float>("PrecioTotal")
                         .HasColumnType("REAL");
 
+                    b.Property<string>("descripcionDispositivo")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("ProductoId");
 
                     b.ToTable("Productos");
@@ -160,6 +177,7 @@ namespace Pablo_Burgos_Proyecto_Final.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Direccion")
+                        .IsRequired()
                         .HasMaxLength(40)
                         .HasColumnType("TEXT");
 

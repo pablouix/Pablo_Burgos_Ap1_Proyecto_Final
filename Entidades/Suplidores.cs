@@ -16,12 +16,12 @@ namespace Pablo_Burgos_Proyecto_Final.Entidades
         [MinLength(3, ErrorMessage ="Este campo debe tener al menos {1} caracteres.")]
         [MaxLength(40, ErrorMessage = "Este campo debe tener maximo {1} caracteres.")]
         public string Compania { get; set; }
-        [Required]
         public DateTime FechaDeCreacion { get; set; } = DateTime.Now;
 
+        [Required(ErrorMessage ="Campo obligatorio.")]
         [MinLength(3, ErrorMessage ="Este campo debe tener al menos {1} caracteres.")]
         [MaxLength(40, ErrorMessage = "Este campo debe tener maximo {1} caracteres.")]
-        public string? Direccion { get; set; }
+        public string Direccion { get; set; }
 
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$",
                    ErrorMessage = "Ingresa un numero de telefono valido.")]

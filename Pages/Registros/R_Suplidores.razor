@@ -1,5 +1,6 @@
 @page "/R_Suplidores"
 @page "/R_Suplidores/{SuplidoresId:int}"
+@using System.Text.RegularExpressions
 
 @inject IToastService toast
 
@@ -138,7 +139,8 @@
 
     public void Guardar()
     {
-        if(this.SuplidoresId > 0 && suplidores.Representante != null)
+        string? telefono = suplidores.Telefono;
+        if(this.SuplidoresId > 0 && suplidores.Representante != null && suplidores.Compania != null && suplidores.Direccion != null)
         {
             if(SuplidoresBLL.Guardar(this.suplidores))
             {
@@ -152,7 +154,7 @@
         }
         else
         {
-            toast.ShowInfo("Falta llenar campos");
+            toast.ShowWarning("Campos incompletos.");
         }
     }
 }

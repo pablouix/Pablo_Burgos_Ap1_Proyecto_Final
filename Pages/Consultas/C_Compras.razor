@@ -11,10 +11,11 @@
         <div class="card-body">
             <form>
                 <div class="input-group d-flex align-items-end">
-                    <InputSelect class="form-control col-2" @bind-Value="filtro">
+                    <InputSelect class="form-select col-2" @bind-Value="filtro">
                         <option value="0" disabled selected>Seleccione un filtro</option>
                         <option value="1">Id</option>
                         <option value="2">Concepto</option>
+                        <option value="3">Suplidor</option>
                     </InputSelect>
 
                     <div class="flex-fill mx-2">
@@ -49,9 +50,11 @@
                 <tr class="table">
                     <th>Id</th>
                     <th>Concepto</th>
-                   @*  <th>Cantidad</th> *@
                     <th>Fecha de compra</th>
-                    <th>Suplidor Id</th>
+                    <th>Cantidad unidades</th> 
+                    <th>Precio total</th>
+                   
+                    <th>Suplidor</th>
                     <th>Modificar</th>
                 </tr>
             </thead>
@@ -61,9 +64,10 @@
                     <tr>
                         <td>@item.CompraId</td>
                         <td>@item.Concepto</td>
-                       @*  <th> </th> *@
-                        <td>@item.FechaDeCompra</td>
-                        <td>@item.SuplidoresId</td>
+                        <td>@item.FechaDeCompra.Day/@item.FechaDeCompra.Month/@item.FechaDeCompra.Year</td>
+                        <td>@item.CantidadProductos </td> 
+                        <td>$ @(@item.precioTotal*100/100)</td>
+                        <td>@item.DescripcionSuplidor</td>
                         <a class="btn btn-sm btn-outline-primary oi oi-eye" href="R_Compras/@item.CompraId"></a>
                     </tr>
                 }
@@ -104,6 +108,10 @@
 
                 case "2":
                     lista = ComprasBLL.ListaComprasCriterio(c => c.Concepto.ToLower().Contains(Criterio.ToLower()));
+                    break;
+
+                case "3":
+                    lista = ComprasBLL.ListaComprasCriterio(c => c.DescripcionSuplidor.ToLower().Contains(Criterio.ToLower()));
                     break;
             }
         }

@@ -17,7 +17,10 @@ namespace Pablo_Burgos_Proyecto_Final.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Concepto = table.Column<string>(type: "TEXT", maxLength: 40, nullable: false),
                     FechaDeCompra = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    SuplidoresId = table.Column<int>(type: "INTEGER", nullable: false)
+                    CantidadProductos = table.Column<int>(type: "INTEGER", nullable: false),
+                    SuplidoresId = table.Column<int>(type: "INTEGER", nullable: false),
+                    precioTotal = table.Column<float>(type: "REAL", nullable: false),
+                    DescripcionSuplidor = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -52,7 +55,8 @@ namespace Pablo_Burgos_Proyecto_Final.Migrations
                     Itbis = table.Column<float>(type: "REAL", nullable: false),
                     PrecioConItbis = table.Column<float>(type: "REAL", nullable: false),
                     PrecioTotal = table.Column<float>(type: "REAL", nullable: false),
-                    DispositivoId = table.Column<int>(type: "INTEGER", nullable: false)
+                    DispositivoId = table.Column<int>(type: "INTEGER", nullable: false),
+                    descripcionDispositivo = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -68,7 +72,7 @@ namespace Pablo_Burgos_Proyecto_Final.Migrations
                     Representante = table.Column<string>(type: "TEXT", maxLength: 40, nullable: false),
                     Compania = table.Column<string>(type: "TEXT", maxLength: 40, nullable: false),
                     FechaDeCreacion = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Direccion = table.Column<string>(type: "TEXT", maxLength: 40, nullable: true),
+                    Direccion = table.Column<string>(type: "TEXT", maxLength: 40, nullable: false),
                     Telefono = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -85,7 +89,8 @@ namespace Pablo_Burgos_Proyecto_Final.Migrations
                     CompraId = table.Column<int>(type: "INTEGER", nullable: false),
                     ProductoId = table.Column<int>(type: "INTEGER", nullable: false),
                     Descripcion = table.Column<string>(type: "TEXT", nullable: false),
-                    Cantidad = table.Column<int>(type: "INTEGER", nullable: false)
+                    Cantidad = table.Column<int>(type: "INTEGER", nullable: false),
+                    PrecioUnidad = table.Column<float>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -53,6 +53,10 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
                     Productos productos = ProductosBLL.Buscar(item.ProductoId);
                     productos.Cantidad -= item.Cantidad;
 
+                    compras.CantidadProductos -= item.Cantidad;
+
+                    compras.precioTotal -= item.Cantidad*productos.Precio;
+
                     float calculoItbis = productos.Precio * productos.Itbis/100;
                     productos.PrecioConItbis = productos.Precio + calculoItbis;
                     productos.PrecioTotal = productos.Cantidad * productos.PrecioConItbis;
@@ -64,6 +68,10 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
                 {
                     Productos productos = ProductosBLL.Buscar(item.ProductoId);
                     productos.Cantidad += item.Cantidad;
+
+                    compras.CantidadProductos += item.Cantidad;
+
+                    compras.precioTotal += item.Cantidad*productos.Precio;
 
                     float calculoItbis = productos.Precio * productos.Itbis/100;
                     productos.PrecioConItbis = productos.Precio + calculoItbis;
@@ -94,6 +102,10 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
                 {
                     Productos productos = ProductosBLL.Buscar(item.ProductoId);
                     productos.Cantidad += item.Cantidad;
+                    
+                    compras.CantidadProductos += item.Cantidad;
+
+                    compras.precioTotal += item.Cantidad*productos.Precio;
 
                     float calculoItbis = productos.Precio * productos.Itbis/100;
                     productos.PrecioConItbis = productos.Precio + calculoItbis;
