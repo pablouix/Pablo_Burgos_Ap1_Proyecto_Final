@@ -11,7 +11,7 @@ using Pablo_Burgos_Proyecto_Final.DAL;
 namespace Pablo_Burgos_Proyecto_Final.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20220406033017_migracion_inicial")]
+    [Migration("20220410032459_migracion_inicial")]
     partial class migracion_inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

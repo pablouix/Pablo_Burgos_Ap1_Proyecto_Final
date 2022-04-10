@@ -15,14 +15,14 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
             _contexto = contexto;
         }
 
-        private static bool Existe(int id)
+        public static bool Existe(int id)
         {
             bool paso = false;
             try
             {
                 paso = _contexto.Productos.Any(p => p.ProductoId == id);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -31,9 +31,9 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
 
         public static bool Guardar(Productos productos)
         {
-            if(Existe(productos.ProductoId))
+            if (Existe(productos.ProductoId))
                 return Modificar(productos);
-            else    
+            else
                 return Insertar(productos);
         }
 
@@ -47,7 +47,7 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
                 paso = _contexto.SaveChanges() > 0;
 
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -63,7 +63,7 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
                 _contexto.Productos.Add(productos);
                 paso = _contexto.SaveChanges() > 0;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -78,7 +78,7 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
             {
                 productos = _contexto.Productos.Where(p => p.ProductoId == id).SingleOrDefault();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -92,13 +92,14 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
             {
                 var productos = _contexto.Productos.Find(id);
 
-                if(productos != null)
+                if (productos != null)
                 {
+                  
                     _contexto.Productos.Remove(productos);
                     paso = _contexto.SaveChanges() > 0;
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -113,7 +114,7 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
             {
                 lista = _contexto.Productos.Where(criterio).AsNoTracking().ToList();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -127,9 +128,8 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
             try
             {
                 lista = _contexto.Productos.AsNoTracking().ToList();
-
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
 

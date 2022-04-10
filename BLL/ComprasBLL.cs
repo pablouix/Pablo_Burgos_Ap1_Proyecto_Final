@@ -22,7 +22,7 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
             {
                 paso = _contexto.Compras.Any(c => c.CompraId == id);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -30,9 +30,9 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
         }
         public static bool Guardar(Compras compras)
         {
-            if(Existe(compras.CompraId))
+            if (Existe(compras.CompraId))
                 return Modificar(compras);
-            else    
+            else
                 return Insertar(compras);
         }
 
@@ -48,41 +48,49 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
                 .AsNoTracking()
                 .SingleOrDefault();
 
-                foreach(var item in compraAnterior.ComprasDetalles)
+                foreach (var item in compraAnterior.ComprasDetalles)
                 {
-                    Productos productos = ProductosBLL.Buscar(item.ProductoId);
-                    productos.Cantidad -= item.Cantidad;
+                    Productos productos;
+                    if (ProductosBLL.Existe(item.ProductoId))
+                    {
+                        productos = ProductosBLL.Buscar(item.ProductoId);
+                        productos.Cantidad -= item.Cantidad;
 
-                    compras.CantidadProductos -= item.Cantidad;
+                        compras.CantidadProductos -= item.Cantidad;
 
-                    compras.precioTotal -= item.Cantidad*productos.Precio;
+                        compras.precioTotal -= item.Cantidad * productos.Precio;
 
-                    float calculoItbis = productos.Precio * productos.Itbis/100;
-                    productos.PrecioConItbis = productos.Precio + calculoItbis;
-                    productos.PrecioTotal = productos.Cantidad * productos.PrecioConItbis;
+                        float calculoItbis = productos.Precio * productos.Itbis / 100;
+                        productos.PrecioConItbis = productos.Precio + calculoItbis;
+                        productos.PrecioTotal = productos.Cantidad * productos.PrecioConItbis;
+                    }
                 }
 
                 List<ComprasDetalles> comprasDetalles = compras.ComprasDetalles;
 
-                foreach(var item in comprasDetalles)
+                foreach (var item in comprasDetalles)
                 {
-                    Productos productos = ProductosBLL.Buscar(item.ProductoId);
-                    productos.Cantidad += item.Cantidad;
+                    Productos productos;
+                    if (ProductosBLL.Existe(item.ProductoId))
+                    {
+                        productos = ProductosBLL.Buscar(item.ProductoId);
+                        productos.Cantidad += item.Cantidad;
 
-                    compras.CantidadProductos += item.Cantidad;
+                        compras.CantidadProductos += item.Cantidad;
 
-                    compras.precioTotal += item.Cantidad*productos.Precio;
+                        compras.precioTotal += item.Cantidad * productos.Precio;
 
-                    float calculoItbis = productos.Precio * productos.Itbis/100;
-                    productos.PrecioConItbis = productos.Precio + calculoItbis;
-                    productos.PrecioTotal = productos.Cantidad * productos.PrecioConItbis;
+                        float calculoItbis = productos.Precio * productos.Itbis / 100;
+                        productos.PrecioConItbis = productos.Precio + calculoItbis;
+                        productos.PrecioTotal = productos.Cantidad * productos.PrecioConItbis;
+                    }
                 }
 
                 _contexto.Entry(compras).State = EntityState.Modified;
                 paso = _contexto.SaveChanges() > 0;
 
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -98,23 +106,27 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
                 _contexto.Compras.Add(compras);
 
                 List<ComprasDetalles> comprasDetalles = compras.ComprasDetalles;
-                foreach(var item in comprasDetalles)
+                foreach (var item in comprasDetalles)
                 {
-                    Productos productos = ProductosBLL.Buscar(item.ProductoId);
-                    productos.Cantidad += item.Cantidad;
-                    
-                    compras.CantidadProductos += item.Cantidad;
+                    Productos productos;
+                    if (ProductosBLL.Existe(item.ProductoId))
+                    {
+                        productos = ProductosBLL.Buscar(item.ProductoId);
+                        productos.Cantidad += item.Cantidad;
 
-                    compras.precioTotal += item.Cantidad*productos.Precio;
+                        compras.CantidadProductos += item.Cantidad;
 
-                    float calculoItbis = productos.Precio * productos.Itbis/100;
-                    productos.PrecioConItbis = productos.Precio + calculoItbis;
-                    productos.PrecioTotal = productos.Cantidad * productos.PrecioConItbis;
+                        compras.precioTotal += item.Cantidad * productos.Precio;
+
+                        float calculoItbis = productos.Precio * productos.Itbis / 100;
+                        productos.PrecioConItbis = productos.Precio + calculoItbis;
+                        productos.PrecioTotal = productos.Cantidad * productos.PrecioConItbis;
+                    }
                 }
 
                 paso = _contexto.SaveChanges() > 0;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -129,7 +141,7 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
             {
                 compras = _contexto.Compras.Include(c => c.ComprasDetalles).Where(c => c.CompraId == id).SingleOrDefault();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -143,25 +155,29 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
             {
                 var compras = _contexto.Compras.Find(id);
 
-                if(compras != null)
+                if (compras != null)
                 {
                     List<ComprasDetalles> comprasDetalles = compras.ComprasDetalles;
 
-                    foreach(var item in comprasDetalles)
+                    foreach (var item in comprasDetalles)
                     {
-                        Productos productos = ProductosBLL.Buscar(item.ProductoId);
-                        productos.Cantidad -= item.Cantidad;
+                        Productos productos;
+                        if (ProductosBLL.Existe(item.ProductoId))
+                        {
+                            productos = ProductosBLL.Buscar(item.ProductoId);
+                            productos.Cantidad -= item.Cantidad;
 
-                        float calculoItbis = productos.Precio * productos.Itbis/100;
-                        productos.PrecioConItbis = productos.Precio + calculoItbis;
-                        productos.PrecioTotal = productos.Cantidad * productos.PrecioConItbis;
+                            float calculoItbis = productos.Precio * productos.Itbis / 100;
+                            productos.PrecioConItbis = productos.Precio + calculoItbis;
+                            productos.PrecioTotal = productos.Cantidad * productos.PrecioConItbis;
+                        }
                     }
 
                     _contexto.Compras.Remove(compras);
                     paso = _contexto.SaveChanges() > 0;
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -176,7 +192,7 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
             {
                 lista = _contexto.Compras.Where(criterio).AsNoTracking().ToList();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -191,7 +207,7 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
             {
                 lista = _contexto.Compras.AsNoTracking().ToList();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
 

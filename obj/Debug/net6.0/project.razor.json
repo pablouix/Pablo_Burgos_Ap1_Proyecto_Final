@@ -45,35 +45,35 @@
         }
       },
       {
-        "HashCode": 895059506,
+        "HashCode": 94441423,
         "Kind": "Components.Component",
-        "Name": "Pablo_Burgos_Proyecto_Final.Pages.Consultas.C_Suplidores",
+        "Name": "Pablo_Burgos_Proyecto_Final.Pages.Consultas.C_Productos",
         "AssemblyName": "Pablo_Burgos_Proyecto_Final",
         "CaseSensitive": true,
         "TagMatchingRules": [
           {
-            "TagName": "C_Suplidores"
+            "TagName": "C_Productos"
           }
         ],
         "Metadata": {
           "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "Pablo_Burgos_Proyecto_Final.Pages.Consultas.C_Suplidores"
+          "Common.TypeName": "Pablo_Burgos_Proyecto_Final.Pages.Consultas.C_Productos"
         }
       },
       {
-        "HashCode": 79560007,
+        "HashCode": 294708346,
         "Kind": "Components.Component",
-        "Name": "Pablo_Burgos_Proyecto_Final.Pages.Consultas.C_Suplidores",
+        "Name": "Pablo_Burgos_Proyecto_Final.Pages.Consultas.C_Productos",
         "AssemblyName": "Pablo_Burgos_Proyecto_Final",
         "CaseSensitive": true,
         "TagMatchingRules": [
           {
-            "TagName": "Pablo_Burgos_Proyecto_Final.Pages.Consultas.C_Suplidores"
+            "TagName": "Pablo_Burgos_Proyecto_Final.Pages.Consultas.C_Productos"
           }
         ],
         "Metadata": {
           "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "Pablo_Burgos_Proyecto_Final.Pages.Consultas.C_Suplidores",
+          "Common.TypeName": "Pablo_Burgos_Proyecto_Final.Pages.Consultas.C_Productos",
           "Components.NameMatch": "Components.FullyQualifiedNameMatch"
         }
       },
@@ -111,35 +111,35 @@
         }
       },
       {
-        "HashCode": 94441423,
+        "HashCode": 895059506,
         "Kind": "Components.Component",
-        "Name": "Pablo_Burgos_Proyecto_Final.Pages.Consultas.C_Productos",
+        "Name": "Pablo_Burgos_Proyecto_Final.Pages.Consultas.C_Suplidores",
         "AssemblyName": "Pablo_Burgos_Proyecto_Final",
         "CaseSensitive": true,
         "TagMatchingRules": [
           {
-            "TagName": "C_Productos"
+            "TagName": "C_Suplidores"
           }
         ],
         "Metadata": {
           "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "Pablo_Burgos_Proyecto_Final.Pages.Consultas.C_Productos"
+          "Common.TypeName": "Pablo_Burgos_Proyecto_Final.Pages.Consultas.C_Suplidores"
         }
       },
       {
-        "HashCode": 294708346,
+        "HashCode": 79560007,
         "Kind": "Components.Component",
-        "Name": "Pablo_Burgos_Proyecto_Final.Pages.Consultas.C_Productos",
+        "Name": "Pablo_Burgos_Proyecto_Final.Pages.Consultas.C_Suplidores",
         "AssemblyName": "Pablo_Burgos_Proyecto_Final",
         "CaseSensitive": true,
         "TagMatchingRules": [
           {
-            "TagName": "Pablo_Burgos_Proyecto_Final.Pages.Consultas.C_Productos"
+            "TagName": "Pablo_Burgos_Proyecto_Final.Pages.Consultas.C_Suplidores"
           }
         ],
         "Metadata": {
           "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "Pablo_Burgos_Proyecto_Final.Pages.Consultas.C_Productos",
+          "Common.TypeName": "Pablo_Burgos_Proyecto_Final.Pages.Consultas.C_Suplidores",
           "Components.NameMatch": "Components.FullyQualifiedNameMatch"
         }
       },
@@ -173,59 +173,6 @@
         "Metadata": {
           "Runtime.Name": "Components.IComponent",
           "Common.TypeName": "Pablo_Burgos_Proyecto_Final.Pages.Index",
-          "Components.NameMatch": "Components.FullyQualifiedNameMatch"
-        }
-      },
-      {
-        "HashCode": 831401872,
-        "Kind": "Components.Component",
-        "Name": "Pablo_Burgos_Proyecto_Final.Pages.Registros.R_Productos",
-        "AssemblyName": "Pablo_Burgos_Proyecto_Final",
-        "CaseSensitive": true,
-        "TagMatchingRules": [
-          {
-            "TagName": "R_Productos"
-          }
-        ],
-        "BoundAttributes": [
-          {
-            "Kind": "Components.Component",
-            "Name": "ProductoId",
-            "TypeName": "System.Int32",
-            "Metadata": {
-              "Common.PropertyName": "ProductoId"
-            }
-          }
-        ],
-        "Metadata": {
-          "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "Pablo_Burgos_Proyecto_Final.Pages.Registros.R_Productos"
-        }
-      },
-      {
-        "HashCode": -1171702146,
-        "Kind": "Components.Component",
-        "Name": "Pablo_Burgos_Proyecto_Final.Pages.Registros.R_Productos",
-        "AssemblyName": "Pablo_Burgos_Proyecto_Final",
-        "CaseSensitive": true,
-        "TagMatchingRules": [
-          {
-            "TagName": "Pablo_Burgos_Proyecto_Final.Pages.Registros.R_Productos"
-          }
-        ],
-        "BoundAttributes": [
-          {
-            "Kind": "Components.Component",
-            "Name": "ProductoId",
-            "TypeName": "System.Int32",
-            "Metadata": {
-              "Common.PropertyName": "ProductoId"
-            }
-          }
-        ],
-        "Metadata": {
-          "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "Pablo_Burgos_Proyecto_Final.Pages.Registros.R_Productos",
           "Components.NameMatch": "Components.FullyQualifiedNameMatch"
         }
       },
@@ -332,6 +279,59 @@
         "Metadata": {
           "Runtime.Name": "Components.IComponent",
           "Common.TypeName": "Pablo_Burgos_Proyecto_Final.Pages.Registros.R_Compras",
+          "Components.NameMatch": "Components.FullyQualifiedNameMatch"
+        }
+      },
+      {
+        "HashCode": 831401872,
+        "Kind": "Components.Component",
+        "Name": "Pablo_Burgos_Proyecto_Final.Pages.Registros.R_Productos",
+        "AssemblyName": "Pablo_Burgos_Proyecto_Final",
+        "CaseSensitive": true,
+        "TagMatchingRules": [
+          {
+            "TagName": "R_Productos"
+          }
+        ],
+        "BoundAttributes": [
+          {
+            "Kind": "Components.Component",
+            "Name": "ProductoId",
+            "TypeName": "System.Int32",
+            "Metadata": {
+              "Common.PropertyName": "ProductoId"
+            }
+          }
+        ],
+        "Metadata": {
+          "Runtime.Name": "Components.IComponent",
+          "Common.TypeName": "Pablo_Burgos_Proyecto_Final.Pages.Registros.R_Productos"
+        }
+      },
+      {
+        "HashCode": -1171702146,
+        "Kind": "Components.Component",
+        "Name": "Pablo_Burgos_Proyecto_Final.Pages.Registros.R_Productos",
+        "AssemblyName": "Pablo_Burgos_Proyecto_Final",
+        "CaseSensitive": true,
+        "TagMatchingRules": [
+          {
+            "TagName": "Pablo_Burgos_Proyecto_Final.Pages.Registros.R_Productos"
+          }
+        ],
+        "BoundAttributes": [
+          {
+            "Kind": "Components.Component",
+            "Name": "ProductoId",
+            "TypeName": "System.Int32",
+            "Metadata": {
+              "Common.PropertyName": "ProductoId"
+            }
+          }
+        ],
+        "Metadata": {
+          "Runtime.Name": "Components.IComponent",
+          "Common.TypeName": "Pablo_Burgos_Proyecto_Final.Pages.Registros.R_Productos",
           "Components.NameMatch": "Components.FullyQualifiedNameMatch"
         }
       },
