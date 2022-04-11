@@ -1,4 +1,5 @@
 @page "/C_Productos"
+@inject IToastService toast
 
 <PageTitle>Consulta de Productos</PageTitle>
 
@@ -46,17 +47,19 @@
             </form>
         </div>
 
-        <table class="table table-light">
+        <table class="table table-bordered">
             <thead class="thead">
-                <tr class="table">
+                <tr class="table-dark">
                     <th>Id</th>
                     <th>Descripci&oacute;n</th>
                     <th>Fecha</th>
                     <th>Cantidad</th>
-                    <th>Precio</th>
+                    <th>Costo</th>
                     <th>Itbis</th>
                     <th>Precio con itbis</th>
-                    <th>Precio total exitencia (itbis)</th>
+                    <th>Ganancia</th>
+                    <th>Precio de venta</th>
+                    <th>Precio total exitencia (P Ventas)</th>
                     <th>Dispositivo</th>
                     <th>Modificar</th>
                 </tr>
@@ -69,12 +72,14 @@
                         <td>@item.Descripcion</td>
                         <td>@item.Fecha.Day/@item.Fecha.Month/@item.Fecha.Year</td>
                         <td>@item.Cantidad</td>
-                        <td> $ @(@item.Precio*100/100) </td>
+                        <td> $ @(@item.Costo*100/100) </td>
                         <td>@item.Itbis % </td>
                         <td> $ @(@item.PrecioConItbis*100/100) </td>
-                        <td> $ @(@item.PrecioTotal*100/100) </td> 
+                        <td> @(@item.Ganancia) % </td>
+                        <td> $ @(@item.PrecioConIbisGanancia*100/100) </td>
+                        <td> $ @(@item.TotalInventario*100/100) </td> 
                         <td>@item.descripcionDispositivo </td>
-                        <a class="btn btn-sm btn-outline-primary oi oi-eye" href="R_Productos/@item.ProductoId"></a>
+                        <td><a class="btn btn-lg btn-primary oi oi-pencil" href="R_Productos/@item.ProductoId"></a> <span class="btn btn-lg btn-danger oi oi-trash" href="#"  @onclick="@(() => RemoverProducto(item))"/> </td>                       
                     </tr>
                 }
             </tbody>
@@ -132,5 +137,18 @@
         else if (fechaHasta.HasValue)
             lista = ProductosBLL.ListaProductosCriterio(f => f.Fecha.Date <= fechaHasta);
         
+    }
+
+    private void RemoverProducto(Productos item)
+    {
+        if(ProductosBLL.Eliminar(item.ProductoId))
+        {
+            toast.ShowSuccess("Producto eliminado con éxito.");
+            lista = ProductosBLL.ListaProductosCriterio(p => true);
+        }
+        else
+        {
+            toast.ShowError("No se completó la eliminación del producto.");
+        }
     }
 }

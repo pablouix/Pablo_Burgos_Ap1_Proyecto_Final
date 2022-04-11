@@ -11,7 +11,7 @@ using Pablo_Burgos_Proyecto_Final.DAL;
 namespace Pablo_Burgos_Proyecto_Final.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20220410032459_migracion_inicial")]
+    [Migration("20220411193233_migracion_inicial")]
     partial class migracion_inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,7 +30,7 @@ namespace Pablo_Burgos_Proyecto_Final.Migrations
 
                     b.Property<string>("Concepto")
                         .IsRequired()
-                        .HasMaxLength(40)
+                        .HasMaxLength(60)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DescripcionSuplidor")
@@ -135,9 +135,12 @@ namespace Pablo_Burgos_Proyecto_Final.Migrations
                     b.Property<int>("Cantidad")
                         .HasColumnType("INTEGER");
 
+                    b.Property<float>("Costo")
+                        .HasColumnType("REAL");
+
                     b.Property<string>("Descripcion")
                         .IsRequired()
-                        .HasMaxLength(40)
+                        .HasMaxLength(60)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("DispositivoId")
@@ -146,16 +149,19 @@ namespace Pablo_Burgos_Proyecto_Final.Migrations
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Ganancia")
+                        .HasColumnType("INTEGER");
+
                     b.Property<float>("Itbis")
                         .HasColumnType("REAL");
 
-                    b.Property<float>("Precio")
+                    b.Property<float>("PrecioConIbisGanancia")
                         .HasColumnType("REAL");
 
                     b.Property<float>("PrecioConItbis")
                         .HasColumnType("REAL");
 
-                    b.Property<float>("PrecioTotal")
+                    b.Property<float>("TotalInventario")
                         .HasColumnType("REAL");
 
                     b.Property<string>("descripcionDispositivo")
@@ -175,12 +181,12 @@ namespace Pablo_Burgos_Proyecto_Final.Migrations
 
                     b.Property<string>("Compania")
                         .IsRequired()
-                        .HasMaxLength(40)
+                        .HasMaxLength(60)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Direccion")
                         .IsRequired()
-                        .HasMaxLength(40)
+                        .HasMaxLength(60)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("FechaDeCreacion")
@@ -188,7 +194,7 @@ namespace Pablo_Burgos_Proyecto_Final.Migrations
 
                     b.Property<string>("Representante")
                         .IsRequired()
-                        .HasMaxLength(40)
+                        .HasMaxLength(60)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Telefono")

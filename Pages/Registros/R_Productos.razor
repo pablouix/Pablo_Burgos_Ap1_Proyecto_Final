@@ -1,5 +1,6 @@
 @page "/R_Productos"
 @page "/R_Productos/{ProductoId:int}"
+@using System.Text.RegularExpressions
 
 @inject IToastService toast
 
@@ -26,7 +27,7 @@
                                 <InputNumber @bind-Value="ProductoId" class="form-control col-4" />
                                 <div class="input-group-append">
                                     <button type="button" class="btn btn-primary input-group-text"
-                                        @onclick="Buscar">Buscar</button>
+                                        @onclick="Buscar"><span class="oi oi-magnifying-glass"/></button>
                                 </div>
                             </div>
                         </div>
@@ -71,10 +72,15 @@
                         <ValidationMessage For="@(() => productos.Cantidad)" @onblur="calularPrecioConItbis" />
                     </div>           
                     <div class="col">
-                        <label> Precio </label>
-                        <InputNumber class="form-control" @bind-Value="productos.Precio" @onblur="calularPrecioConItbis" />
-                        <ValidationMessage For="@(() => productos.Precio)" />
+                        <label> Costo </label>
+                        <InputNumber class="form-control" @bind-Value="productos.Costo" @onblur="calularPrecioConItbis" />
+                        <ValidationMessage For="@(() => productos.Costo)" />
                     </div>
+                                                                       
+                </form>
+
+                @* Cantidad, precio, itbis *@
+                <form class="row g-3 mb-3"> 
                     <div class="col">
                         <label> Itbis </label>
                         <div class="input-group">
@@ -82,21 +88,41 @@
                             <span class="input-group-text">%</span>
                         </div>
                         <ValidationMessage For="@(() => productos.Itbis)" />
-                    </div>                                                      
-                </form>
+                    </div>  
 
-                <form class="row g-3 mb-3"> 
+
+
                     <div class="col">
                         <label> Precio con Itbis </label>
                         <InputNumber readonly class="form-control" @bind-Value="productos.PrecioConItbis"/>
                     
-                    </div>           
+                    </div>  
+
+                </form>  
+
+                <form class="row g-3 mb-3">
                     <div class="col">
-                        <label> Precio Total </label>
-                        <InputNumber readonly class="form-control" @bind-Value="productos.PrecioTotal" />
-                    
-                    </div>
-                </form>            
+                        <label> Ganancia </label>
+                        <div class="input-group">
+                            <InputNumber class="form-control" @bind-Value="productos.Ganancia" @onblur="calcularGanancia"/>
+                            <span class="input-group-text">%</span>
+                        </div>
+                        <ValidationMessage For="@(() => productos.Ganancia)" />
+                    </div> 
+
+                    <div class="col">
+                        <label> Precio unidad </label>
+                        <InputNumber readonly class="form-control" @bind-Value="productos.PrecioConIbisGanancia" /> 
+                    </div> 
+                </form>
+
+                
+               
+                <div class="col">
+                        <label> Precio total exitencia (P Ventas) </label>
+                        <InputNumber readonly class="form-control" @bind-Value="productos.TotalInventario" /> 
+                </div>
+
             </div>
 
             <div class="card-footer">
@@ -174,8 +200,11 @@
 
     public void Guardar()
     {
+        calcularGanancia();
         if(this.ProductoId > 0 && productos.Descripcion != null
-        && productos.Cantidad > 0 && productos.Precio > 0 && filtroDispositivos != null) 
+        && productos.Cantidad > 0 && productos.Costo > 0 && filtroDispositivos != null
+        && productos.Ganancia >= 1 && productos.Ganancia <=100 
+        && Regex.IsMatch(productos.Descripcion, @"^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$"))  
         {
             AgregarDatosDeDispositivo();
             if(ProductosBLL.Guardar(this.productos))
@@ -190,21 +219,29 @@
         }
         else
         {
-            toast.ShowWarning("Campos incomplestos");
+            toast.ShowWarning("Campos incompletos o con errores.");
             //Nuevo();
         }
     }
 
+    public void calcularGanancia()
+    {
+        float ganancia = productos.Costo * productos.Ganancia/100;
+        float calculoItbis = productos.Costo * productos.Itbis/100;
+        productos.PrecioConIbisGanancia = productos.Costo + ganancia + calculoItbis; //precio unidad
+        calcularPrecioTotal();
+    }
+
     public void calularPrecioConItbis()
     {
-        float calculoItbis = productos.Precio * productos.Itbis/100;
-        productos.PrecioConItbis = productos.Precio + calculoItbis;
-        calcularPrecioTotal();
+        float calculoItbis = productos.Costo * productos.Itbis/100;
+        productos.PrecioConItbis = productos.Costo + calculoItbis; //precio con itbis
     }
 
     public void calcularPrecioTotal()
     {
-        productos.PrecioTotal = productos.Cantidad * productos.PrecioConItbis;
+        calularPrecioConItbis();
+        productos.TotalInventario = productos.Cantidad * productos.PrecioConIbisGanancia; // precio total en inventario
     }
 
     public void AgregarDatosDeDispositivo()

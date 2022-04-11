@@ -1,5 +1,6 @@
 @page "/R_Compras"
 @page "/R_Compras/{ComprasId:int}"
+@using System.Text.RegularExpressions
 
 @inject IToastService toast
 
@@ -26,7 +27,7 @@
                                 <InputNumber @bind-Value="ComprasId" class="form-control col-4" />
                                 <div class="input-group-append">
                                     <button type="button" class="btn btn-primary input-group-text"
-                                        @onclick="Buscar">Buscar</button>
+                                        @onclick="Buscar"><span class="oi oi-magnifying-glass"/></button>
                                 </div>
                             </div>
                         </div>
@@ -62,13 +63,7 @@
                     <ValidationMessage For="@(() => compras.SuplidoresId)" />
 
                 </div>
-
-
-              
-               
             </div>
-
-            
                 <div class="card">
                     <div class="card-header">
                         <h3>Compras detalles</h3>
@@ -85,7 +80,7 @@
                                     
                                     @foreach (var item in  ProductosBLL.ListaProductosSimple())
                                     {
-                                        <option value="@item.ProductoId" >@item.Descripcion </option>
+                                        <option value="@item.ProductoId" >@item.Descripcion - @item.descripcionDispositivo </option>
                                     } 
 
                                 </InputSelect>  
@@ -111,9 +106,9 @@
                 </div>
 
                 <div class="card-body">
-                    <table class="table table-light">
+                    <table class="table table-bordered">
                         <thead class="thead">
-                            <tr class="table">
+                            <tr class="table-dark">
                                 <th>Id producto</th>
                                 <th>Descripci&oacute;n</th>
                                 <th>Cantidad</th>
@@ -136,7 +131,7 @@
                             } 
                         </tbody>
                     </table>
-                    <span class="input-group-text">Precio total: $ @compras.ComprasDetalles.Sum(p => p.Cantidad*p.PrecioUnidad)</span> 
+                    <span class="input-group-text">Costo total: $ @compras.ComprasDetalles.Sum(p => p.Cantidad*p.PrecioUnidad)</span> 
                 </div>
             <div class="card-footer">
                 <div class="form-group text-center" display: inline-block>
@@ -171,8 +166,6 @@
 
     [Inject]
     public ComprasBLL? comprasBLL { get; set; }
-
-    
     public int idDetalle { get; set; }
     public string descripcionDetalle { get; set; }
     public int cantidadDetalle { get; set; }
@@ -229,25 +222,35 @@
 
     public void Guardar()
     {
-        if(this.ComprasId > 0 && filtroSuplidores != null && compras.Concepto != null && filtroSuplidores != null)
+        if(this.ComprasId > 0 && filtroSuplidores != null && compras.Concepto != null && filtroSuplidores != null
+        && Regex.IsMatch(compras.Concepto, @"^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$"))
         {
-            AgregarDatosDeSuplidores();
-            if(ComprasBLL.Guardar(this.compras))
+            float _numero = compras.ComprasDetalles.Sum(p => p.Cantidad*p.PrecioUnidad);
+            if(_numero > 0)
             {
-                toast.ShowSuccess("Compra guardada con éxito.");
-                Nuevo();
+                AgregarDatosDeSuplidores();
+                if(ComprasBLL.Guardar(this.compras))
+                {
+                    toast.ShowSuccess("Compra guardada con éxito.");
+                    Nuevo();
+                }
+                else
+                {
+                    toast.ShowError("No se guardó la compra.");
+                }
             }
             else
             {
-                toast.ShowError("No se guardó la compra.");
+                toast.ShowWarning("No tiene detalle.");
             }
         }
         else
         {
-            toast.ShowWarning("Campos incompletos.");
+            toast.ShowWarning("Campos incompletos o con errores.");
             //Nuevo();
         }
     }
+
     public void AgregarDatosDeSuplidores()
     {
         foreach(var item in SuplidoresBLL.ListaSuplidoresSimple())
@@ -272,7 +275,7 @@
                     descripcionDetalle = item.Descripcion;
                     cantidadDetalle = cantidadProducto;
                     
-                    compras.ComprasDetalles.Add(new ComprasDetalles(idDetalle, descripcionDetalle, cantidadDetalle, item.Precio));
+                    compras.ComprasDetalles.Add(new ComprasDetalles(idDetalle, descripcionDetalle, cantidadDetalle, item.Costo));
                 }
                 else
                 {
@@ -287,6 +290,8 @@
 
     private void RemoverFila(ComprasDetalles item)
     {
+        filtroProductos = Convert.ToString(item.ProductoId);
+        cantidadProducto = item.Cantidad;
         this.compras.ComprasDetalles.Remove(item);
     }
 }

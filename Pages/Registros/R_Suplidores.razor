@@ -27,7 +27,7 @@
                                 <InputNumber @bind-Value="SuplidoresId" class="form-control col-4" />
                                 <div class="input-group-append">
                                     <button type="button" class="btn btn-primary input-group-text"
-                                        @onclick="Buscar">Buscar</button>
+                                        @onclick="Buscar"><span class="oi oi-magnifying-glass"/></button>
                                 </div>
                             </div>
                         </div>
@@ -139,8 +139,10 @@
 
     public void Guardar()
     {
-        string? telefono = suplidores.Telefono;
-        if(this.SuplidoresId > 0 && suplidores.Representante != null && suplidores.Compania != null && suplidores.Direccion != null)
+        if(this.SuplidoresId > 0 && suplidores.Representante != null && suplidores.Compania != null 
+        && suplidores.Direccion != null && Regex.IsMatch(suplidores.Representante, @"^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$")
+        && Regex.IsMatch(suplidores.Compania, @"^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$") 
+        && Regex.IsMatch(suplidores.Direccion, @"^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$"))
         {
             if(SuplidoresBLL.Guardar(this.suplidores))
             {
@@ -154,7 +156,7 @@
         }
         else
         {
-            toast.ShowWarning("Campos incompletos.");
+            toast.ShowWarning("Campos incompletos o con errores.");
         }
     }
 }

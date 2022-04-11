@@ -1,4 +1,5 @@
 @page "/C_Compras"
+@inject IToastService toast
 
 <PageTitle>Consulta de Compras</PageTitle>
 
@@ -45,15 +46,14 @@
             </form>
         </div>
 
-        <table class="table table-light">
+        <table class="table table-bordered">
             <thead class="thead">
-                <tr class="table">
+                <tr class="table-dark">
                     <th>Id</th>
                     <th>Concepto</th>
                     <th>Fecha de compra</th>
                     <th>Cantidad unidades</th> 
-                    <th>Precio total</th>
-                   
+                    <th>Costo total</th>              
                     <th>Suplidor</th>
                     <th>Modificar</th>
                 </tr>
@@ -68,7 +68,7 @@
                         <td>@item.CantidadProductos </td> 
                         <td>$ @(@item.precioTotal*100/100)</td>
                         <td>@item.DescripcionSuplidor</td>
-                        <a class="btn btn-sm btn-outline-primary oi oi-eye" href="R_Compras/@item.CompraId"></a>
+                        <td> <a class="btn btn-lg btn-primary oi oi-pencil" href="R_Compras/@item.CompraId"></a> <span class="btn btn-lg btn-danger oi oi-trash" href="#"  @onclick="@(() => RemoverCompra(item))"/></td>
                     </tr>
                 }
             </tbody>
@@ -127,5 +127,18 @@
         else if (fechaHasta.HasValue)
             lista = ComprasBLL.ListaComprasCriterio(f => f.FechaDeCompra.Date <= fechaHasta);
 
+    }
+
+    private void RemoverCompra(Compras item)
+    {
+        if(ComprasBLL.Eliminar(item.CompraId))
+        {
+            lista = ComprasBLL.ListaComprasCriterio(c => true);
+            toast.ShowSuccess("Compra eliminada con éxito.");
+        }
+        else
+        {
+            toast.ShowError("No se completó la eliminación de la compra.");
+        }
     }
 }

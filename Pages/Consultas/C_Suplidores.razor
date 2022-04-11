@@ -1,4 +1,5 @@
 @page "/C_Suplidores"
+@inject IToastService toast
 
 <PageTitle>Consulta de Suplidores</PageTitle>
 
@@ -45,9 +46,9 @@
             </form>
         </div>
 
-        <table class="table table-light">
+        <table class="table table-bordered">
             <thead class="thead">
-                <tr class="table">
+                <tr class="table-dark">
                     <th>Id</th>
                     <th>Representante</th>
                     <th>Compañia</th>
@@ -67,7 +68,7 @@
                         <td>@item.Direccion </td>
                         <td>@item.Telefono </td>
                         <td>@item.FechaDeCreacion.Day/@item.FechaDeCreacion.Month/@item.FechaDeCreacion.Year</td>
-                        <a class="btn btn-sm btn-outline-primary oi oi-eye" href="R_Suplidores/@item.SuplidoresId"></a>
+                        <td><a class="btn  btn-lg  btn-primary oi oi-pencil" href="R_Suplidores/@item.SuplidoresId"></a> <span class="btn btn-lg btn-danger oi oi-trash" href="#"  @onclick="@(() => RemoverSuplidor(item))"/></td>
                     </tr>
                 }
             </tbody>
@@ -124,5 +125,18 @@
         else if (fechaHasta.HasValue)
             lista = SuplidoresBLL.ListaSuplidoresCriterio(f => f.FechaDeCreacion.Date <= fechaHasta);
         
+    }
+    private void RemoverSuplidor(Suplidores item)
+    {
+        if(SuplidoresBLL.Eliminar(item.SuplidoresId))
+        {
+            toast.ShowSuccess("Suplidor eliminado con éxito.");
+            lista = SuplidoresBLL.ListaSuplidoresCriterio(s => true);
+
+        }
+        else
+        {
+            toast.ShowError("No se completó la eliminación del suplidor.");
+        }
     }
 }

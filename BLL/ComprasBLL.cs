@@ -57,12 +57,14 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
                         productos.Cantidad -= item.Cantidad;
 
                         compras.CantidadProductos -= item.Cantidad;
+                        compras.precioTotal -= item.Cantidad * productos.Costo;
 
-                        compras.precioTotal -= item.Cantidad * productos.Precio;
+                        float ganancia = productos.Costo * productos.Ganancia / 100;
+                        float calculoItbis = productos.Costo * productos.Itbis / 100;
 
-                        float calculoItbis = productos.Precio * productos.Itbis / 100;
-                        productos.PrecioConItbis = productos.Precio + calculoItbis;
-                        productos.PrecioTotal = productos.Cantidad * productos.PrecioConItbis;
+                        productos.PrecioConIbisGanancia = productos.Costo + ganancia + calculoItbis;
+                        productos.PrecioConItbis = productos.Costo + calculoItbis;
+                        productos.TotalInventario = productos.Cantidad * productos.PrecioConIbisGanancia;
                     }
                 }
 
@@ -77,12 +79,14 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
                         productos.Cantidad += item.Cantidad;
 
                         compras.CantidadProductos += item.Cantidad;
+                        compras.precioTotal += item.Cantidad * productos.Costo;
 
-                        compras.precioTotal += item.Cantidad * productos.Precio;
+                        float ganancia = productos.Costo * productos.Ganancia / 100;
+                        float calculoItbis = productos.Costo * productos.Itbis / 100;
 
-                        float calculoItbis = productos.Precio * productos.Itbis / 100;
-                        productos.PrecioConItbis = productos.Precio + calculoItbis;
-                        productos.PrecioTotal = productos.Cantidad * productos.PrecioConItbis;
+                        productos.PrecioConIbisGanancia = productos.Costo + ganancia + calculoItbis;
+                        productos.PrecioConItbis = productos.Costo + calculoItbis;
+                        productos.TotalInventario = productos.Cantidad * productos.PrecioConIbisGanancia;
                     }
                 }
 
@@ -115,12 +119,14 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
                         productos.Cantidad += item.Cantidad;
 
                         compras.CantidadProductos += item.Cantidad;
+                        compras.precioTotal += item.Cantidad * productos.Costo;
 
-                        compras.precioTotal += item.Cantidad * productos.Precio;
+                        float ganancia = productos.Costo * productos.Ganancia / 100;
+                        float calculoItbis = productos.Costo * productos.Itbis / 100;
 
-                        float calculoItbis = productos.Precio * productos.Itbis / 100;
-                        productos.PrecioConItbis = productos.Precio + calculoItbis;
-                        productos.PrecioTotal = productos.Cantidad * productos.PrecioConItbis;
+                        productos.PrecioConIbisGanancia = productos.Costo + ganancia + calculoItbis;
+                        productos.PrecioConItbis = productos.Costo + calculoItbis;
+                        productos.TotalInventario = productos.Cantidad * productos.PrecioConIbisGanancia;
                     }
                 }
 
@@ -167,9 +173,12 @@ namespace Pablo_Burgos_Proyecto_Final.BLL
                             productos = ProductosBLL.Buscar(item.ProductoId);
                             productos.Cantidad -= item.Cantidad;
 
-                            float calculoItbis = productos.Precio * productos.Itbis / 100;
-                            productos.PrecioConItbis = productos.Precio + calculoItbis;
-                            productos.PrecioTotal = productos.Cantidad * productos.PrecioConItbis;
+                            float ganancia = productos.Costo * productos.Ganancia / 100;
+                            float calculoItbis = productos.Costo * productos.Itbis / 100;
+
+                            productos.PrecioConIbisGanancia = productos.Costo + ganancia + calculoItbis;
+                            productos.PrecioConItbis = productos.Costo + calculoItbis;
+                            productos.TotalInventario = productos.Cantidad * productos.PrecioConIbisGanancia;
                         }
                     }
 
