@@ -1,2 +1,2 @@
 ﻿# Búho Smartphone - Presentación 
-![proyect](https://user-images.githubusercontent.com/97201832/161893736-3ea82950-a5b5-467c-b1d3-6d10a0a8c080.png)
+![proyect](https://user-images.githubusercontent.com/97201832/162819458-ceb220e8-e1f3-4311-8dff-417bbf435336.png)
